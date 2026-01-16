@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #e8f6ff;
+    padding: 40px;
+}
+
+.form-container {
+    background: white;
+    max-width: 400px;
+    margin: auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #0077b6;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+}
+
+.guardar {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background: #00b4d8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.guardar:hover {
+    background: #0096c7;
+}

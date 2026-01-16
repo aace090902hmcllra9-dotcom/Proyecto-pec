@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar usuario</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e8f6ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .contenedor {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0077b6;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005f8f;
+        }
+
+        .volver {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #0077b6;
+            font-weight: bold;
+        }
+
+        .volver:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+    <h1>✏️ Editar usuario</h1>
+
+    <form method="POST">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" value="{{ usuario[0] }}" required>
+
+        <label>Correo:</label>
+        <input type="email" name="correo" value="{{ usuario[1] }}" required>
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+
+    <a href="/tabla" class="volver">⬅ Volver</a>
+</div>
+
+</body>
+</html>

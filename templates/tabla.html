@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4ff;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .botones-izq {
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-bar a,
+        .btn-menu {
+            padding: 10px 15px;
+            background: #1e90ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .menu {
+            background: #6a5acd;
+        }
+
+        .top-bar a:hover,
+        .btn-menu:hover {
+            opacity: 0.9;
+        }
+
+        form input {
+            padding: 8px;
+            width: 200px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #1e90ff;
+            color: white;
+        }
+
+        .editar {
+            background: #ffa500;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .eliminar {
+            background: #e53935;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .editar:hover { background: #ff8c00; }
+        .eliminar:hover { background: #c62828; }
+
+        .footer-menu {
+            margin-top: 25px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📋 Tabla de usuarios</h1>
+
+<div class="top-bar">
+    <div class="botones-izq">
+        <a href="/inicio" class="menu">🏠 Menú</a>
+        <a href="/insertar">➕ Agregar usuario</a>
+    </div>
+
+    <form action="/buscar" method="get">
+        <input type="text" name="q" placeholder="Buscar..." value="{{ q or '' }}">
+        <button type="submit">🔍</button>
+    </form>
+</div>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for u in usuarios %}
+    <tr>
+        <td>{{ u[0] }}</td>
+        <td>{{ u[1] }}</td>
+        <td>{{ u[2] }}</td>
+        <td>
+            <a href="/editar/{{ u[0] }}" class="editar">Editar</a>
+            <a href="/eliminar/{{ u[0] }}" class="eliminar"
+               onclick="return confirm('¿Eliminar usuario?')">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- BOTÓN REGRESAR -->
+<div class="footer-menu">
+    <a href="/inicio" class="btn-menu">⬅ Regresar al menú</a>
+</div>
+
+</body>
+</html>

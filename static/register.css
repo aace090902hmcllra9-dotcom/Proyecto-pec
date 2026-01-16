@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-box {
+    background: white;
+    padding: 30px;
+    width: 350px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.register-box h2 {
+    margin-bottom: 20px;
+    color: #56ab2f;
+}
+
+.register-box input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.register-box button {
+    background: #56ab2f;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 95%;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.register-box button:hover {
+    background: #3e7d1f;
+}
+
+.register-box .btn {
+    display: block;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #56ab2f;
+}

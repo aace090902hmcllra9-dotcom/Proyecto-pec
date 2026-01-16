@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rescate del Agua - EXTREMO</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle,#003c8f,#4fc3f7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.game{
+    background:white;
+    width:95%;
+    max-width:420px;
+    padding:15px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.5);
+    text-align:center;
+}
+
+h1{ color:#01579b; margin:5px 0; }
+
+.stats{
+    display:flex;
+    justify-content:space-between;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.meter{
+    width:100%;
+    height:22px;
+    background:#cfd8dc;
+    border-radius:12px;
+    margin:10px 0;
+    overflow:hidden;
+}
+
+.water{
+    height:100%;
+    width:100%;
+    background:linear-gradient(to right,#4fc3f7,#0288d1);
+    transition:.2s;
+}
+
+.area{
+    position:relative;
+    height:260px;
+    border:3px dashed #01579b;
+    border-radius:15px;
+    margin-top:10px;
+    overflow:hidden;
+}
+
+.leak{
+    position:absolute;
+    font-size:34px;
+    animation: blink .5s infinite;
+    cursor:pointer;
+    user-select:none;
+}
+
+.big{ font-size:42px; }
+
+@keyframes blink{
+    50%{opacity:.2;}
+}
+
+.msg{
+    margin-top:10px;
+    font-weight:bold;
+}
+
+button{
+    margin-top:10px;
+    padding:10px;
+    width:100%;
+    border:none;
+    border-radius:12px;
+    background:#0288d1;
+    color:white;
+    font-size:16px;
+}
+
+#exit{
+    background:#b71c1c;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+<h1>💧 Rescate del Agua</h1>
+<p><b>Modo EXTREMO</b> — Llega a 25 rescates</p>
+
+<div class="stats">
+    <span>Agua: <span id="waterText">100</span>%</span>
+    <span>Rescates: <span id="savedText">0</span>/25</span>
+</div>
+
+<div class="meter">
+    <div class="water" id="waterBar"></div>
+</div>
+
+<div class="area" id="area"></div>
+
+<div class="msg" id="msg"></div>
+<button id="retry" style="display:none;">🔄 Volver a intentar</button>
+<button id="exit">🚪 Salir al menú</button>
+</div>
+
+<!-- Sonidos -->
+<audio id="okSound" preload="auto"></audio>
+<audio id="badSound" preload="auto"></audio>
+<audio id="alarmSound" preload="auto" loop></audio>
+
+<script>
+let water, saved, gameOver, spawnRate;
+const maxSaved = 25;
+
+const area = document.getElementById("area");
+const waterBar = document.getElementById("waterBar");
+const waterText = document.getElementById("waterText");
+const savedText = document.getElementById("savedText");
+const msg = document.getElementById("msg");
+const retryBtn = document.getElementById("retry");
+const exitBtn = document.getElementById("exit");
+
+const okSound = document.getElementById("okSound");
+const badSound = document.getElementById("badSound");
+const alarmSound = document.getElementById("alarmSound");
+
+okSound.src = "https://cdn.pixabay.com/audio/2022/03/15/audio_5c7c89d7e0.mp3";
+badSound.src = "https://cdn.pixabay.com/audio/2022/03/15/audio_3c64f73b5b.mp3";
+alarmSound.src = "https://cdn.pixabay.com/audio/2021/08/04/audio_9bba3a6b6a.mp3";
+
+function start(){
+    water = 100;
+    saved = 0;
+    spawnRate = 700;
+    gameOver = false;
+    msg.textContent = "";
+    msg.style.color = "black";
+    retryBtn.style.display = "none";
+    area.innerHTML = "";
+    alarmSound.pause();
+    update();
+    loop();
+}
+
+area.addEventListener("click", ()=>{
+    if(gameOver) return;
+    water -= 3;
+    badSound.play().catch(()=>{});
+    update();
+});
+
+function spawnLeak(){
+    if(gameOver) return;
+
+    const leak = document.createElement("div");
+    leak.className = "leak";
+
+    const big = Math.random() < 0.4;
+    leak.textContent = big ? "💥🚰" : "🚰";
+    if(big) leak.classList.add("big");
+
+    leak.style.left = Math.random()*(area.clientWidth-50)+"px";
+    leak.style.top = Math.random()*(area.clientHeight-50)+"px";
+
+    leak.addEventListener("click", e=>{
+        e.stopPropagation();
+        saved++;
+        water += big ? 2 : 4;
+        okSound.play().catch(()=>{});
+        leak.remove();
+        update();
+    });
+
+    area.appendChild(leak);
+
+    setTimeout(()=>{
+        if(area.contains(leak)){
+            leak.remove();
+            water -= big ? 22 : 14;
+            badSound.play().catch(()=>{});
+            update();
+        }
+    }, big ? 750 : 1000);
+}
+
+function update(){
+    water = Math.min(100, water);
+    waterText.textContent = Math.max(0, water);
+    savedText.textContent = saved;
+    waterBar.style.width = Math.max(0, water)+"%";
+
+    if(water <= 30 && alarmSound.paused){
+        alarmSound.play().catch(()=>{});
+    }
+
+    if(water <= 0) end(false);
+    if(saved >= maxSaved) end(true);
+}
+
+function end(win){
+    gameOver = true;
+    alarmSound.pause();
+    msg.textContent = win
+        ? "🏆 ¡Ganaste! Rescataste 25 fugas sin desperdiciar agua"
+        : "❌ Perdiste: se desperdició demasiada agua";
+    msg.style.color = win ? "green" : "red";
+    retryBtn.style.display = "block";
+}
+
+function loop(){
+    if(gameOver) return;
+    spawnLeak();
+    spawnRate = Math.max(280, spawnRate - 10);
+    setTimeout(loop, spawnRate);
+}
+
+retryBtn.onclick = start;
+exitBtn.onclick = ()=> window.location.href = "/inicio";
+
+start();
+</script>
+
+</body>
+</html>
