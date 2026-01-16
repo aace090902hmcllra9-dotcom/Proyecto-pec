@@ -97,7 +97,7 @@ def inicio():
         return redirect("/")
     return render_template("index.html", nombre=session["user"])
 
-# ---------- JUEGO (ESTA ERA LA QUE FALTABA) ----------
+# ---------- JUEGO ----------
 @app.route("/juego")
 def juego():
     if "user" not in session:
@@ -169,7 +169,7 @@ def insertar():
 
     return render_template("insertar.html")
 
-# ---------- EDITAR ----------
+# ---------- EDITAR (ÚNICO CAMBIO AQUÍ) ----------
 @app.route("/editar/<int:id>", methods=["GET", "POST"])
 def editar(id):
     if "user" not in session:
@@ -178,7 +178,10 @@ def editar(id):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT nombre, correo FROM users WHERE id=?", (id,))
+    cursor.execute(
+        "SELECT nombre, correo, password FROM users WHERE id=?",
+        (id,)
+    )
     usuario = cursor.fetchone()
 
     if not usuario:
@@ -188,6 +191,12 @@ def editar(id):
     if request.method == "POST":
         nombre = request.form["nombre"]
         correo = request.form["correo"]
+        password_ingresada = request.form["password"]
+
+        # 🔐 VALIDACIÓN REAL DE CONTRASEÑA
+        if password_ingresada != usuario[2]:
+            conn.close()
+            return "❌ Contraseña incorrecta"
 
         if not correo_valido(correo):
             conn.close()
